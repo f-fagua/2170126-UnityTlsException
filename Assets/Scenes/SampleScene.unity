@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_FileName: wikipedia_urls_2k
-  m_TotalRequests: 100
+  m_TotalRequests: 2000
 --- !u!4 &1006406208
 Transform:
   m_ObjectHideFlags: 0
