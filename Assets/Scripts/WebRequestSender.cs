@@ -1,21 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Serialization;
 
 public class WebRequestSender : MonoBehaviour
 {
+    public static int s_CurrentSuccesfulRequests = 0;
+    public static int s_CurrentFailedRequests = 0;
+    
     [SerializeField] 
     private string m_FileName = "wikipedia_urls_2k";
 
-    [FormerlySerializedAs("m_TotalRequest")] [SerializeField] 
+    [SerializeField] 
     private int m_TotalRequests = 10;
     
     private List<string> m_Urls = new List<string>();
+    
+    [SerializeField]
+    public UnityEngine.UI.Text m_SuccessfulResponseText;
+    
+    [SerializeField]
+    public UnityEngine.UI.Text m_FailedResponseText;
 
     void Start()
     {
+        s_CurrentSuccesfulRequests = 0;
+        s_CurrentFailedRequests = 0;
+        
         ReadFileFromResources();
         StartCoroutine(ProcessWebRequests());
     }
@@ -57,10 +70,35 @@ public class WebRequestSender : MonoBehaviour
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log($"Success: {url}\nResponse: {webRequest.downloadHandler.text}");
+                s_CurrentSuccesfulRequests++;
+                m_SuccessfulResponseText.text = s_CurrentSuccesfulRequests + " | " + webRequest.url.Substring(0,35);
             }
             else
             {
                 Debug.LogError($"Error: {url}\n{webRequest.error}");
+                s_CurrentFailedRequests++;
+                m_FailedResponseText.text = s_CurrentFailedRequests + " | " + webRequest.error;
+            }
+        }
+    }
+    
+    private async Task<string> FetchDataAsync(string url)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            var operation = request.SendWebRequest();
+
+            while (!operation.isDone)
+                await Task.Yield();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                return request.downloadHandler.text;
+            }
+            else
+            {
+                Debug.LogError($"Error: {request.error}");
+                return null;
             }
         }
     }
