@@ -653,7 +653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_FileName: wikipedia_urls_2k
-  m_TotalRequests: 10
+  m_TotalRequests: 600
   m_SuccessfulResponseText: {fileID: 1785697903}
   m_FailedResponseText: {fileID: 1479599049}
 --- !u!4 &1006406208

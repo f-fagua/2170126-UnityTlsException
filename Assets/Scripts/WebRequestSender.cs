@@ -30,9 +30,46 @@ public class WebRequestSender : MonoBehaviour
         s_CurrentFailedRequests = 0;
         
         ReadFileFromResources();
-        StartCoroutine(ProcessWebRequests());
+        //StartCoroutine(ProcessWebRequests());
+        ProcessWebRequestsAsync();
     }
 
+    private void ProcessWebRequestsAsync()
+    {
+        for (int i = 0; i < m_TotalRequests; i++)
+        {
+            var url = m_Urls[i];
+            var result = FetchDataAsync(url);
+            Debug.Log(result);
+        }
+    }
+
+    private async Task<string> FetchDataAsync(string url)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get(url.Trim()))
+        {
+            var operation = request.SendWebRequest();
+
+            while (!operation.isDone)
+                await Task.Yield();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log($"Success: {url}\nResponse: {request.downloadHandler.text}");
+                s_CurrentSuccesfulRequests++;
+                m_SuccessfulResponseText.text = s_CurrentSuccesfulRequests + " | " + request.url.Substring(0,35);
+                return request.downloadHandler.text;
+            }
+            else
+            {
+                Debug.LogError($"Error: {url}\n{request.error}");
+                s_CurrentFailedRequests++;
+                m_FailedResponseText.text = s_CurrentFailedRequests + " | " + request.error;
+                return null;
+            }
+        }
+    }
+    
     private void ReadFileFromResources()
     {
         TextAsset textAsset = Resources.Load<TextAsset>(m_FileName);
@@ -78,27 +115,6 @@ public class WebRequestSender : MonoBehaviour
                 Debug.LogError($"Error: {url}\n{webRequest.error}");
                 s_CurrentFailedRequests++;
                 m_FailedResponseText.text = s_CurrentFailedRequests + " | " + webRequest.error;
-            }
-        }
-    }
-    
-    private async Task<string> FetchDataAsync(string url)
-    {
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
-        {
-            var operation = request.SendWebRequest();
-
-            while (!operation.isDone)
-                await Task.Yield();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                return request.downloadHandler.text;
-            }
-            else
-            {
-                Debug.LogError($"Error: {request.error}");
-                return null;
             }
         }
     }
