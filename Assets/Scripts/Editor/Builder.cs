@@ -1,18 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Builder : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [MenuItem("Unity Support/Build Bundles")]
+    public static void BuildAssetBundles()
     {
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        BuildPipeline.BuildAssetBundles("Out/MacOS", BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
     }
 }

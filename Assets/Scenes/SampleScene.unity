@@ -913,6 +913,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8902609589469996747, guid: 2439d1ba5735340098e0fb2af744ceb1, type: 3}
+      propertyPath: m_FileName
+      value: urls
+      objectReference: {fileID: 0}
+    - target: {fileID: 8902609589469996747, guid: 2439d1ba5735340098e0fb2af744ceb1, type: 3}
       propertyPath: m_FailedRequestsText
       value: 
       objectReference: {fileID: 1479599049}

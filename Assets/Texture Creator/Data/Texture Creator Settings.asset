@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Width: 512
   m_Height: 512
-  m_Textures: 1000
-  m_Bundles: 1000
+  m_Textures: 2000
+  m_Bundles: 2000
   m_AssetBundleDefaultName: test
   m_DefaultFolder: Assets/Textures
